@@ -1,0 +1,7 @@
+#include "NDCAFMaker.fcl"
+nd_cafmaker: @local::standard_nd_cafmaker
+nd_cafmaker.CAFMakerSettings.GHEPFiles: ["neutrino.279_1659347965.ghep.root"]
+nd_cafmaker.CAFMakerSettings.PandoraLArRecoNDFile: "LArRecoND.root"
+nd_cafmaker.CAFMakerSettings.OutputFile: "CAF.root"
+nd_cafmaker.CAFMakerSettings.Verbosity: VERBOSE
+nd_cafmaker.CAFMakerSettings.NumEvts: 3
