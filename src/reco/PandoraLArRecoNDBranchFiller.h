@@ -1,6 +1,6 @@
 /// Fill Pandora LArRecoND branches
 ///
-/// \author  J.J.Back <J.J.Back@warwick.ac.uk>
+/// \author  John Back <J.J.Back@warwick.ac.uk>
 /// \date    Aug 2024
 
 #ifndef ND_CAFMAKER_PandoraLArRecoNDBranchFiller_H

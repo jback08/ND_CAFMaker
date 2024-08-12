@@ -141,7 +141,11 @@ namespace cafmaker
 	// Cluster length multiplied by LAr density (g/cm2)
 	track.len_gcm2 = length1*m_LArRho;
 
-	// Use truth matching info from Pandora's LArContent hierarchy tools
+	// Use truth matching info from Pandora's LArContent hierarchy tools.
+	// For LArRecoND MC SpacePoints, we offset the MCId's to make them all unique:
+	// nuID = orig_nuID + 10^8, so orig_nuID = nuID - 10^8
+	// mcID = orig_mcID + nuIndex*10^6, where nuIndex = 0 to N-1 neutrinos
+	// nuIndex = int(mcID/10^6), so orig_mcID = mcID - nuIndex*10^6
 	const int mcNuId = (m_mcNuIdVect != nullptr) ? (*m_mcNuIdVect)[i] : 0;
 	const int isPrimary = (m_isPrimaryVect != nullptr) ? (*m_isPrimaryVect)[i] : -1;
 	const int mcId = (m_mcIdVect != nullptr) ? (*m_mcIdVect)[i] : 0;
@@ -203,7 +207,11 @@ namespace cafmaker
 	const float energy = (m_energyVect != nullptr) ? (*m_energyVect)[i] : 0.0;
 	shower.Evis = energy;
 
-	// Use truth matching info from Pandora's LArContent hierarchy tools
+	// Use truth matching info from Pandora's LArContent hierarchy tools.
+	// For LArRecoND MC SpacePoints, we offset the MCId's to make them all unique:
+	// nuID = orig_nuID + 10^8, so orig_nuID = nuID - 10^8
+	// mcID = orig_mcID + nuIndex*10^6, where nuIndex = 0 to N-1 neutrinos
+	// nuIndex = int(mcID/10^6), so orig_mcID = mcID - nuIndex*10^6
 	const int mcNuId = (m_mcNuIdVect != nullptr) ? (*m_mcNuIdVect)[i] : 0;
 	const int isPrimary = (m_isPrimaryVect != nullptr) ? (*m_isPrimaryVect)[i] : -1;
 	const int mcId = (m_mcIdVect != nullptr) ? (*m_mcIdVect)[i] : 0;
