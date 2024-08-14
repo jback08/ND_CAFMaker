@@ -143,15 +143,19 @@ namespace cafmaker
 
 	// Use truth matching info from Pandora's LArContent hierarchy tools.
 	// For LArRecoND MC SpacePoints, we offset the MCId's to make them all unique:
-	// nuID = orig_nuID + 10^8, so orig_nuID = nuID - 10^8
-	// mcID = orig_mcID + nuIndex*10^6, where nuIndex = 0 to N-1 neutrinos
-	// nuIndex = int(mcID/10^6), so orig_mcID = mcID - nuIndex*10^6
+	// nuId = orig_nuId + 10^8, so orig_nuId = nuId - 10^8
+	// mcId = orig_mcId + nuIndex*10^6, where nuIndex = 0 to N-1 neutrinos
+	// nuIndex = int(mcId/10^6), so orig_mcId = mcId - nuIndex*10^6
+	// Use the original MCId values
 	const int mcNuId = (m_mcNuIdVect != nullptr) ? (*m_mcNuIdVect)[i] : 0;
+	const int origMCNuId = (mcNuId > m_nuIdOffset) ? mcNuId - m_nuIdOffset : mcNuId;
 	const int isPrimary = (m_isPrimaryVect != nullptr) ? (*m_isPrimaryVect)[i] : -1;
 	const int mcId = (m_mcIdVect != nullptr) ? (*m_mcIdVect)[i] : 0;
+	const int nuIndex = int(mcId/m_maxMCId);
+	const int origMCId = mcId - nuIndex*m_maxMCId;
 	
 	caf::TrueParticleID trueID;
-	trueID.ixn = mcNuId;
+	trueID.ixn = origMCNuId;
 	if (isPrimary == 1) {
 	    trueID.type = caf::TrueParticleID::kPrimary;
 	} else if (isPrimary == -1) {
@@ -159,7 +163,7 @@ namespace cafmaker
 	} else {
 	    trueID.type = caf::TrueParticleID::kSecondary;
 	}
-	trueID.part = mcId;
+	trueID.part = origMCId;
 
 	// Just store the best MC match
 	std::vector<caf::TrueParticleID> trueIDVect;
@@ -209,15 +213,19 @@ namespace cafmaker
 
 	// Use truth matching info from Pandora's LArContent hierarchy tools.
 	// For LArRecoND MC SpacePoints, we offset the MCId's to make them all unique:
-	// nuID = orig_nuID + 10^8, so orig_nuID = nuID - 10^8
-	// mcID = orig_mcID + nuIndex*10^6, where nuIndex = 0 to N-1 neutrinos
-	// nuIndex = int(mcID/10^6), so orig_mcID = mcID - nuIndex*10^6
+	// nuId = orig_nuId + 10^8, so orig_nuId = nuId - 10^8
+	// mcId = orig_mcId + nuIndex*10^6, where nuIndex = 0 to N-1 neutrinos
+	// nuIndex = int(mcId/10^6), so orig_mcId = mcId - nuIndex*10^6
+	// Use the original MCId values
 	const int mcNuId = (m_mcNuIdVect != nullptr) ? (*m_mcNuIdVect)[i] : 0;
+	const int origMCNuId = (mcNuId > m_nuIdOffset) ? mcNuId - m_nuIdOffset : mcNuId;
 	const int isPrimary = (m_isPrimaryVect != nullptr) ? (*m_isPrimaryVect)[i] : -1;
 	const int mcId = (m_mcIdVect != nullptr) ? (*m_mcIdVect)[i] : 0;
-	
+	const int nuIndex = int(mcId/m_maxMCId);
+	const int origMCId = mcId - nuIndex*m_maxMCId;
+
 	caf::TrueParticleID trueID;
-	trueID.ixn = mcNuId;
+	trueID.ixn = origMCNuId;
 	if (isPrimary == 1) {
 	    trueID.type = caf::TrueParticleID::kPrimary;
 	} else if (isPrimary == -1) {
@@ -225,7 +233,7 @@ namespace cafmaker
 	} else {
 	    trueID.type = caf::TrueParticleID::kSecondary;
 	}
-	trueID.part = mcId;
+	trueID.part = origMCId;
 
 	// Just store the best MC match
 	std::vector<caf::TrueParticleID> trueIDVect;

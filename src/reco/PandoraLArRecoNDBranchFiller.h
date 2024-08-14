@@ -63,8 +63,11 @@ namespace cafmaker
       std::vector<int> *m_mcIdVect = nullptr;
       std::vector<int> *m_completenessVect = nullptr;
 
-      float m_LArRho = 1.3973; // LAr density (g/cm3)
-      
+      float m_LArRho{1.3973f}; // LAr density (g/cm3)
+
+      int m_nuIdOffset{100000000};
+      int m_maxMCId{1000000};
+
       mutable std::vector<cafmaker::Trigger> m_Triggers;
       mutable decltype(m_Triggers)::const_iterator  m_LastTriggerReqd; ///< the last trigger requested using _FillRecoBranches
   };
