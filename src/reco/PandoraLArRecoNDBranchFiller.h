@@ -61,7 +61,7 @@ namespace cafmaker
       std::vector<int> *m_mcNuIdVect = nullptr;
       std::vector<int> *m_isPrimaryVect = nullptr;
       std::vector<int> *m_mcIdVect = nullptr;
-      std::vector<int> *m_completenessVect = nullptr;
+      std::vector<float> *m_completenessVect = nullptr;
 
       float m_LArRho{1.3973f}; // LAr density (g/cm3)
 
