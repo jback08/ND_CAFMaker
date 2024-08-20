@@ -45,6 +45,9 @@ namespace cafmaker
       TTree *m_LArRecoNDTree;
 
       int m_eventId;
+      int m_run;
+      int m_subRun;
+      int m_startTime;
       std::vector<int> *m_sliceIdVect = nullptr;
       std::vector<float> *m_startXVect = nullptr;
       std::vector<float> *m_startYVect = nullptr;

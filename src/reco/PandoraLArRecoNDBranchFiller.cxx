@@ -32,6 +32,9 @@ namespace cafmaker
 
 	  // Set branch addresses
 	  m_LArRecoNDTree->SetBranchAddress("event", &m_eventId);
+	  m_LArRecoNDTree->SetBranchAddress("run", &m_run);
+	  m_LArRecoNDTree->SetBranchAddress("subRun", &m_subRun);
+	  m_LArRecoNDTree->SetBranchAddress("startTime", &m_startTime);
 	  m_LArRecoNDTree->SetBranchAddress("sliceId", &m_sliceIdVect);
 	  m_LArRecoNDTree->SetBranchAddress("startX", &m_startXVect);
 	  m_LArRecoNDTree->SetBranchAddress("startY", &m_startYVect);
@@ -79,8 +82,11 @@ namespace cafmaker
     // Get the event entry
     m_LArRecoNDTree->GetEntry(idx);
 
+    // Set the event and run numbers
     sr.meta.nd_lar.enabled = true;
     sr.meta.nd_lar.event = m_eventId;
+    sr.meta.nd_lar.run = m_run;
+    sr.meta.nd_lar.subrun = m_subRun;
 
     // Set the size for the Pandora NDLAr standard record for this trigger/event
     const int nClusters = (m_sliceIdVect != nullptr) ? m_sliceIdVect->size() : 0;
@@ -88,7 +94,7 @@ namespace cafmaker
     sr.nd.lar.npandora = sr.nd.lar.pandora.size();
 
     // Fill track and shower info. Both use the same clusters (PFOs), and no
-    // distinction is made (yet) to identify which are tracks and/or showers
+    // distinction is made (yet) to identify which are tracks or showers
     FillTracks(sr, nClusters);
     FillShowers(sr, nClusters);
   }
@@ -255,7 +261,6 @@ namespace cafmaker
   // ------------------------------------------------------------------------------
   std::deque<Trigger> PandoraLArRecoNDBranchFiller::GetTriggers(int triggerType) const
   {
-    std::deque<Trigger> triggers;
     if (m_Triggers.empty())
     {
 	const int nEvents = m_LArRecoNDTree->GetEntries();
@@ -268,14 +273,28 @@ namespace cafmaker
 	    m_LArRecoNDTree->GetEntry(entry);
 	    
 	    m_Triggers.emplace_back();
-	    Trigger & trig = m_Triggers.back();
-	    trig.evtID = m_eventId;	    
+	    Trigger &trig = m_Triggers.back();
+	    // Event number
+	    trig.evtID = m_eventId;
+	    // Pandora SpacePoint (SP) H5Flow-to-ROOT format doesn't store trigger type, so just select "all"
+	    trig.triggerType = -1;
+	    // Pandora SP format uses timestamp ticks from /charge/events/ts_start
+	    trig.triggerTime_s = m_startTime;
+	    // Use the same (integer) time for now
+	    trig.triggerTime_ns = m_startTime;
+
+	    LOG.VERBOSE() << "  added trigger: evtID = " << trig.evtID
+			  << ", triggerType = " << trig.triggerType
+			  << ", triggerTime_s = " << trig.triggerTime_s
+			  << ", triggerTime_ns = " << trig.triggerTime_ns
+			  << "\n";
 	}
 	// Since we just modified the list, any iterators have been invalidated
 	m_LastTriggerReqd = m_Triggers.end();
     }
 
-    for (const Trigger & trigger : m_Triggers)
+    std::deque<Trigger> triggers;
+    for (const Trigger &trigger : m_Triggers)
     {
       if (triggerType < 0 || triggerType == m_Triggers.back().triggerType)
 	triggers.push_back(trigger);
